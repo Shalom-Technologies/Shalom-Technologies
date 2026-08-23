@@ -1,13 +1,10 @@
-import { NavLink } from 'react-router';
-
-export default function Home() {
-    return (
-        <nav>
-            <NavLink to="/" end>Home</NavLink>
-            <NavLink to="/blog" end>Blog</NavLink>
-            <NavLink to="/pricing" end>Pricing</NavLink>
-            <NavLink to="/blog-page" end>BlogPage</NavLink>
-            <NavLink to="/Careers" end>Careers</NavLink>
-        </nav>
-    )
+function Home() {
+  return (
+    <main>
+      <h1>Shalom Technologies</h1>
+      <p>We build modern digital experiences.</p>
+    </main>
+  );
 }
+
+export default Home;
