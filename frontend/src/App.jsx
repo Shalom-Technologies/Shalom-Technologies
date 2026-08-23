@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createHashRouter, RouterProvider } from 'react-router';
 
 import MainLayout from './layouts/MainLayout';
 
@@ -9,7 +9,7 @@ import Services from './pages/Services';
 import Contact from './pages/Contact';
 import ProjectCaseStudy from './pages/ProjectCaseStudy';
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: '/',
     element: <MainLayout />,
