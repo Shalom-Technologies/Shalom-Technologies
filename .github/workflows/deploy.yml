@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: frontend
+        working-directory: old_version/frontend
 
     steps:
       - name: Checkout
