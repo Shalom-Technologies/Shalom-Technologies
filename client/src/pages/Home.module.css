@@ -1,0 +1,382 @@
+/* ------------------------------------------------------------------ Header */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--color-bg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.headerInner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+  color: var(--color-ink);
+}
+
+.navList {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.navList a {
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: var(--color-ink-soft);
+}
+
+.navList a:hover {
+  color: var(--color-ink);
+}
+
+.navCta {
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+
+.navCta:hover {
+  background: var(--color-accent-dark);
+}
+
+/* --------------------------------------------------------------------- Hero */
+.hero {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 4rem 1.5rem 5rem;
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+@media (max-width: 860px) {
+  .hero {
+    grid-template-columns: 1fr;
+    padding: 2.5rem 1.25rem 3rem;
+  }
+}
+
+.eyebrow {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-blueprint);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.75rem;
+}
+
+.heroHeading {
+  font-family: var(--font-display);
+  font-size: clamp(2.1rem, 4vw, 3.2rem);
+  line-height: 1.1;
+  margin-bottom: 1.25rem;
+}
+
+.heroSubhead {
+  font-size: 1.1rem;
+  color: var(--color-ink-soft);
+  max-width: 46ch;
+  margin-bottom: 2rem;
+}
+
+.heroActions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.primaryButton {
+  background: var(--color-accent);
+  color: #fff;
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  border: none;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+.primaryButton:hover {
+  background: var(--color-accent-dark);
+}
+
+.secondaryButton {
+  padding: 0.85rem 1.6rem;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-ink);
+  border: 1px solid var(--color-border);
+  display: inline-block;
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-ink-soft);
+}
+
+/* --------------------------------------------------------------- Hero visual
+   Purely decorative "sketch becomes finished site" motif. Marked aria-hidden
+   since the surrounding container already has a descriptive role="img" label. */
+.heroVisual {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.sketchCard,
+.finishedCard {
+  width: 160px;
+  height: 200px;
+  border-radius: var(--radius-md);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.sketchCard {
+  background: var(--color-surface);
+  border: 1.5px dashed var(--color-ink-soft);
+}
+
+.sketchLine {
+  height: 8px;
+  border-radius: 2px;
+  background: var(--color-border);
+}
+
+.sketchLine:nth-child(1) {
+  width: 70%;
+}
+.sketchLine:nth-child(2) {
+  width: 50%;
+}
+.sketchLine:nth-child(4) {
+  width: 60%;
+}
+
+.sketchBlock {
+  flex: 1;
+  border: 1.5px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+}
+
+.heroArrow {
+  font-size: 1.5rem;
+  color: var(--color-blueprint);
+}
+
+.finishedCard {
+  background: var(--color-ink);
+  gap: 0.75rem;
+}
+
+.finishedBar {
+  height: 8px;
+  width: 40%;
+  border-radius: 2px;
+  background: var(--color-accent);
+}
+
+.finishedHeading {
+  height: 14px;
+  width: 80%;
+  border-radius: 2px;
+  background: var(--color-bg);
+}
+
+.finishedBlock {
+  flex: 1;
+  border-radius: var(--radius-sm);
+  background: var(--color-blueprint);
+}
+
+.finishedButton {
+  height: 24px;
+  width: 55%;
+  border-radius: var(--radius-sm);
+  background: var(--color-success);
+}
+
+/* ------------------------------------------------------------------ Sections */
+.section {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.sectionAlt {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  padding: 3rem 1.5rem 4rem;
+}
+
+.sectionAlt > * {
+  max-width: var(--max-width);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sectionHeading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+/* ---------------------------------------------------------------------- Steps
+   Numbered list is appropriate here: this genuinely is a fixed, ordered
+   sequence the user follows, not decoration. */
+.stepsList {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 860px) {
+  .stepsList {
+    grid-template-columns: 1fr;
+  }
+}
+
+.stepCard {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 1.75rem;
+}
+
+.stepNumber {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-accent);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.stepTitle {
+  font-size: 1.15rem;
+  margin-bottom: 0.6rem;
+}
+
+.stepBody {
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+/* ----------------------------------------------------------------- Reasons */
+.reasonsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 860px) {
+  .reasonsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reasonCard h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.6rem;
+  color: var(--color-blueprint);
+}
+
+.reasonCard p {
+  color: var(--color-ink-soft);
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------- CTA */
+.ctaSection {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem 5rem;
+  text-align: center;
+}
+
+.ctaHeading {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-bottom: 1rem;
+}
+
+.ctaSubhead {
+  color: var(--color-ink-soft);
+  margin-bottom: 2rem;
+}
+
+/* ------------------------------------------------------------------ Footer */
+.footer {
+  border-top: 1px solid var(--color-border);
+  padding: 2.5rem 1.5rem;
+}
+
+.footerInner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.footerLogo {
+  font-family: var(--font-display);
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.footerTagline {
+  color: var(--color-ink-soft);
+  font-size: 0.9rem;
+}
+
+.footerLinks {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+}
+
+.footerLinks a {
+  text-decoration: none;
+  font-size: 0.9rem;
+  color: var(--color-ink-soft);
+}
+
+.footerLinks a:hover {
+  color: var(--color-ink);
+}
+
+.footerCopyright {
+  max-width: var(--max-width);
+  margin: 2rem auto 0;
+  font-size: 0.8rem;
+  color: var(--color-ink-soft);
+}
