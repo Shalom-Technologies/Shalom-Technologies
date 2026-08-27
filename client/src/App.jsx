@@ -5,6 +5,8 @@ import HomePage from './pages/Home';
 import LoginPage from './pages/Login';
 import RegisterPage from './pages/Register';
 import DashboardPage from './pages/Dashboard';
+import DescribePage from './pages/Describe';
+import PreviewPage from './pages/Preview';
 
 function App() {
   return (
@@ -22,7 +24,23 @@ function App() {
               </ProtectedRoute>
             }
           />
-          {/* Describe, Preview, Admin routes go here as you build them */}
+          <Route
+            path="/describe"
+            element={
+              <ProtectedRoute>
+                <DescribePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id"
+            element={
+              <ProtectedRoute>
+                <PreviewPage />
+              </ProtectedRoute>
+            }
+          />
+          {/* Admin routes go here as you build them */}
         </Routes>
       </BrowserRouter>
     </AuthProvider>
