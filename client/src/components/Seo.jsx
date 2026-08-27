@@ -10,7 +10,7 @@ import { Helmet } from 'react-helmet-async';
  * @param {string} [path] - Path for canonical URL, e.g. "/" or "/pricing".
  * @param {object} [structuredData] - Optional JSON-LD object to embed.
  */
-function Seo({ title, description, path = '/', structuredData }) {
+function Seo({ title, description, path = '/', structuredData, noIndex = false }) {
   const siteUrl = 'https://www.shalomtechnologies.com'; // update once the real domain is live
   const fullTitle = `${title} | Shalom Technologies`;
   const canonicalUrl = `${siteUrl}${path}`;
@@ -20,6 +20,7 @@ function Seo({ title, description, path = '/', structuredData }) {
       <title>{fullTitle}</title>
       <meta name="description" content={description} />
       <link rel="canonical" href={canonicalUrl} />
+      {noIndex && <meta name="robots" content="noindex, nofollow" />}
 
       {/* Open Graph */}
       <meta property="og:type" content="website" />
