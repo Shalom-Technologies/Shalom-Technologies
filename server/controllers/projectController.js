@@ -1,6 +1,7 @@
 const Project = require('../models/Project');
 const { generateMockup, applyTweak, summarizeBrief } = require('../services/openaiService');
 const { notifyTeamProjectFinalized } = require('../services/notificationService');
+const { ADD_ONS, BASE_SITE_PRICE, DEPOSIT_PERCENTAGE } = require('../config/pricing');
 
 const VALID_STATUSES = ['generating', 'reviewing', 'pending_build', 'in_development', 'live'];
 
@@ -105,6 +106,92 @@ async function tweakProject(req, res) {
   }
 }
 
+// Rounds to 2 decimal places to avoid floating point artifacts like
+// 44.99999999999999 showing up in a price the user sees.
+function round2(n) {
+  return Math.round(n * 100) / 100;
+}
+
+async function selectAddOns(req, res) {
+  try {
+    const project = await loadOwnedProject(req, res);
+    if (!project) return;
+
+    if (project.status !== 'reviewing') {
+      return res
+        .status(400)
+        .json({ error: 'Add-ons can only be selected while your project is in review' });
+    }
+
+    const { addOnIds } = req.body;
+    if (!Array.isArray(addOnIds)) {
+      return res.status(400).json({ error: 'addOnIds must be an array of add-on ids' });
+    }
+
+    // Validate every id against the server-side catalog — never trust
+    // prices or names sent from the client, only ids.
+    const selected = [];
+    for (const id of addOnIds) {
+      const match = ADD_ONS.find((a) => a.id === id);
+      if (!match) {
+        return res.status(400).json({ error: `Unknown add-on: ${id}` });
+      }
+      selected.push({ id: match.id, name: match.name, price: match.price });
+    }
+
+    const addOnsTotal = selected.reduce((sum, a) => sum + a.price, 0);
+    const basePrice = BASE_SITE_PRICE;
+    const subtotal = round2(basePrice + addOnsTotal);
+    const depositAmount = round2(subtotal * DEPOSIT_PERCENTAGE);
+
+    project.addOns = selected;
+    project.basePrice = basePrice;
+    project.subtotal = subtotal;
+    project.depositAmount = depositAmount;
+    // Changing add-ons after a deposit was already paid would make the paid
+    // amount stale, so re-selecting resets payment status and requires
+    // paying again against the new total.
+    project.depositPaid = false;
+    project.depositPaidAt = null;
+
+    await project.save();
+    return res.status(200).json(project);
+  } catch (err) {
+    console.error('selectAddOns error:', err);
+    return res.status(500).json({ error: 'Failed to save your add-on selection. Please try again.' });
+  }
+}
+
+// PLACEHOLDER: no real payment processor is wired up yet. This simply marks
+// the deposit as paid so the rest of the flow (finalize, notifications,
+// confirmation screen) can be built and tested end-to-end.
+// TODO: replace this with a real charge via your payment provider
+// (e.g. Stripe, Paystack, Flutterwave) before going live. That integration
+// should verify a successful charge webhook/response before setting
+// depositPaid — never trust a client-side "I paid" signal in production.
+async function payDeposit(req, res) {
+  try {
+    const project = await loadOwnedProject(req, res);
+    if (!project) return;
+
+    if (project.depositPaid) {
+      return res.status(400).json({ error: 'The deposit has already been paid for this project' });
+    }
+    if (!project.subtotal || project.subtotal <= 0) {
+      return res.status(400).json({ error: 'Please select your add-ons before paying the deposit' });
+    }
+
+    project.depositPaid = true;
+    project.depositPaidAt = new Date();
+    await project.save();
+
+    return res.status(200).json(project);
+  } catch (err) {
+    console.error('payDeposit error:', err);
+    return res.status(500).json({ error: 'Failed to process deposit payment. Please try again.' });
+  }
+}
+
 async function finalizeProject(req, res) {
   try {
     const project = await loadOwnedProject(req, res);
@@ -112,6 +199,9 @@ async function finalizeProject(req, res) {
 
     if (project.status !== 'reviewing') {
       return res.status(400).json({ error: 'This project cannot be finalized in its current state' });
+    }
+    if (!project.depositPaid) {
+      return res.status(400).json({ error: 'Please pay your deposit before finalizing your project' });
     }
 
     const brief = await summarizeBrief(project.description, project.conversation);
@@ -160,4 +250,12 @@ async function updateStatus(req, res) {
   }
 }
 
-module.exports = { createProject, getProject, tweakProject, finalizeProject, updateStatus };
+module.exports = {
+  createProject,
+  getProject,
+  tweakProject,
+  selectAddOns,
+  payDeposit,
+  finalizeProject,
+  updateStatus,
+};

@@ -33,6 +33,17 @@ const mockupVersionSchema = new mongoose.Schema(
   }
 );
 
+// A single selected add-on, with price snapshotted at selection time so
+// later catalog price changes never retroactively affect an existing order.
+const addOnSchema = new mongoose.Schema(
+  {
+    id: { type: String, required: true },
+    name: { type: String, required: true },
+    price: { type: Number, required: true },
+  },
+  { _id: false }
+);
+
 const projectSchema = new mongoose.Schema(
   {
     userId: {
@@ -85,6 +96,34 @@ const projectSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       default: null, // set when an admin/developer picks up the project
+    },
+
+    // --------------------------- Add-ons & deposit (pricing snapshotted
+    // here, not recomputed from the live config, so changing catalog prices
+    // later never alters an already-priced project) ---------------------
+    addOns: {
+      type: [addOnSchema],
+      default: [],
+    },
+    basePrice: {
+      type: Number,
+      default: 0,
+    },
+    subtotal: {
+      type: Number,
+      default: 0,
+    },
+    depositAmount: {
+      type: Number,
+      default: 0,
+    },
+    depositPaid: {
+      type: Boolean,
+      default: false,
+    },
+    depositPaidAt: {
+      type: Date,
+      default: null,
     },
   },
   {

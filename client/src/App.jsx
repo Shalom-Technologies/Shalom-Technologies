@@ -7,6 +7,8 @@ import RegisterPage from './pages/Register';
 import DashboardPage from './pages/Dashboard';
 import DescribePage from './pages/Describe';
 import PreviewPage from './pages/Preview';
+import CheckoutPage from './pages/Checkout';
+import ConfirmationPage from './pages/Confirmation';
 
 function App() {
   return (
@@ -37,6 +39,22 @@ function App() {
             element={
               <ProtectedRoute>
                 <PreviewPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id/checkout"
+            element={
+              <ProtectedRoute>
+                <CheckoutPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/projects/:id/confirmation"
+            element={
+              <ProtectedRoute>
+                <ConfirmationPage />
               </ProtectedRoute>
             }
           />

@@ -4,6 +4,8 @@ const {
   createProject,
   getProject,
   tweakProject,
+  selectAddOns,
+  payDeposit,
   finalizeProject,
   updateStatus,
 } = require('../controllers/projectController');
@@ -44,6 +46,8 @@ const tweakLimiter = rateLimit({
 router.post('/', requireAuth, createProjectLimiter, createProject);
 router.get('/:id', requireAuth, getProject);
 router.post('/:id/tweak', requireAuth, tweakLimiter, tweakProject);
+router.post('/:id/addons', requireAuth, selectAddOns);
+router.post('/:id/pay-deposit', requireAuth, payDeposit);
 router.post('/:id/finalize', requireAuth, finalizeProject);
 router.patch('/:id/status', requireAuth, requireAdmin, updateStatus);
 

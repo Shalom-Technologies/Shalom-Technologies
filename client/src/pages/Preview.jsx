@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getProject, tweakProject, finalizeProject } from '../api/projects';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { getProject, tweakProject } from '../api/projects';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Seo from '../components/Seo';
 import styles from './Preview.module.css';
@@ -9,14 +9,13 @@ const MAX_TWEAKS = 5;
 
 function PreviewPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [project, setProject] = useState(null);
   const [loadError, setLoadError] = useState('');
   const [tweakMessage, setTweakMessage] = useState('');
   const [tweaking, setTweaking] = useState(false);
   const [tweakError, setTweakError] = useState('');
-  const [finalizing, setFinalizing] = useState(false);
-  const [finalizeError, setFinalizeError] = useState('');
 
   useEffect(() => {
     let isMounted = true;
@@ -50,19 +49,6 @@ function PreviewPage() {
       setTweakError(err.response?.data?.error || 'That tweak could not be applied. Please try again.');
     } finally {
       setTweaking(false);
-    }
-  }
-
-  async function handleFinalize() {
-    setFinalizeError('');
-    setFinalizing(true);
-    try {
-      const updated = await finalizeProject(id);
-      setProject(updated);
-    } catch (err) {
-      setFinalizeError(err.response?.data?.error || 'Could not finalize this project. Please try again.');
-    } finally {
-      setFinalizing(false);
     }
   }
 
@@ -187,19 +173,12 @@ function PreviewPage() {
                 </button>
               </form>
 
-              {finalizeError && (
-                <p className={styles.formError} role="alert">
-                  {finalizeError}
-                </p>
-              )}
-
               <button
                 type="button"
                 className={styles.finalizeButton}
-                onClick={handleFinalize}
-                disabled={finalizing}
+                onClick={() => navigate(`/projects/${id}/checkout`)}
               >
-                {finalizing ? 'Finalizing…' : 'Finalize & send to our team'}
+                Continue to add-ons & deposit
               </button>
             </>
           )}
