@@ -40,6 +40,8 @@ jobs:
 
       - name: Build frontend
         run: npm run build
+        env:
+          VITE_API_URL=https://shalom-technologies-ai-webgen.fly.dev/api
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6

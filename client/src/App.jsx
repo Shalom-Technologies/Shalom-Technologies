@@ -13,7 +13,7 @@ import ConfirmationPage from './pages/Confirmation';
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
+      <BrowserRouter basename="/Shalom-Technologies">
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/login" element={<LoginPage />} />
