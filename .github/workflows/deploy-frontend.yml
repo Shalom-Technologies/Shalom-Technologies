@@ -22,7 +22,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: client
+        working-directory: shalom
 
     steps:
       - name: Checkout repository
@@ -33,7 +33,7 @@ jobs:
         with:
           node-version: lts/*
           cache: npm
-          cache-dependency-path: client/package-lock.json
+          cache-dependency-path: shalom/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -42,6 +42,9 @@ jobs:
         run: npm run build
         env:
           VITE_API_URL: https://shalom-technologies-ai-webgen.fly.dev/api
+          VITE_EMAILJS_TEMPLATE: template_6napixb
+          VITE_EMAILJS_SERVICE: service_slqwvvs
+          VITE_EMAILJS_PUBLICKEY: yaYqemY3svI8LU8Fs
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v6
@@ -49,7 +52,7 @@ jobs:
       - name: Upload frontend
         uses: actions/upload-pages-artifact@v5
         with:
-          path: client/dist
+          path: shalom/dist
 
   deploy:
     runs-on: ubuntu-latest
