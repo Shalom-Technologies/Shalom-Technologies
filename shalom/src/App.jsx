@@ -74,7 +74,7 @@ function Footer() {
       {/* <Link to="/portfolio">Portfolio</Link> */}
       <Link to="/about">About</Link><Link to="/blog">Blog</Link></div>
       <div><h4>Services</h4>{services.slice(0,4).map(s=><Link key={s.slug} to={"/services/"+s.slug}>{s.title}</Link>)}</div>
-      <div><h4>Start a project</h4><a href="tel:+254700000000"><Phone size={15}/> +254 700 000 000</a><a href="mailto:hello@shalomtech.co.ke"><Mail size={15}/> hello@shalomtech.co.ke</a><Link to="/contact" className="footer-button">Free consultation <ArrowRight size={15}/></Link></div>
+      <div><h4>Start a project</h4><a href="tel:+254703947330"><Phone size={15}/> +254 703 947 330</a><a href="mailto:muthonihannahhailu@gmail.com"><Mail size={15}/> muthonihannahhailu@gmail.com</a><Link to="/contact" className="footer-button">Free consultation <ArrowRight size={15}/></Link></div>
     </div>
     <div className="container footer-bottom"><span>© {new Date().getFullYear()} Shalom Technology Solutions. All rights reserved.</span><span><Link to="/privacy">Privacy Policy</Link><Link to="/terms">Terms of Service</Link></span></div>
   </footer>
