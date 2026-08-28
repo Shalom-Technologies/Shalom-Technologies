@@ -8,6 +8,7 @@ import {
 import { Link, NavLink, Route, Routes, useLocation, useParams } from "react-router-dom";
 import emailjs from '@emailjs/browser';
 
+
 const services = [
   { slug:"business-websites", icon:Globe2, title:"Business Websites", short:"High-converting websites that make your business look credible and easy to discover.", text:"We design responsive, fast and conversion-focused business websites around your goals, customers and brand.", bullets:["Custom responsive UI/UX","Mobile-first development","Contact & lead capture","Analytics-ready setup"] },
   { slug:"ecommerce", icon:ShoppingCart, title:"E-commerce Solutions", short:"Sell online with a polished storefront built around your products and customers.", text:"From product catalogues to checkout journeys, we build practical e-commerce experiences that are easy to manage and scale.", bullets:["Product & category management","Secure checkout integrations","Order workflows","Mobile shopping experience"] },
@@ -25,9 +26,9 @@ const portfolio = [
 ];
 
 const testimonials = [
-  { quote:"Shalom's approach is refreshingly practical. They focused on what the website needed to achieve, not just how it should look.", name:"Future Client", role:"Business Owner" },
-  { quote:"The process feels collaborative from the first conversation. You can tell the team cares about making technology useful.", name:"Future Client", role:"Operations Lead" },
-  { quote:"A strong mix of design, speed and business thinking. Exactly what a growing company needs from a digital partner.", name:"Future Client", role:"Founder" }
+  { quote:"Shalom's approach is refreshingly practical. They focused on what the website needed to achieve, not just how it should look.", name:"Dr. Daisy Masibo", role:"Business Owner" },
+  { quote:"The process feels collaborative from the first conversation. You can tell the team cares about making technology useful.", name:"Nephine Minyiri", role:"Operations Lead" },
+  { quote:"A strong mix of design, speed and business thinking. Exactly what a growing company needs from a digital partner.", name:"Daniel Upao", role:"Founder" }
 ];
 
 function useReveal() {
@@ -124,8 +125,8 @@ function Home() {
 
     <section className="section section-dark"><div className="container split"><div className="reveal"><span className="eyebrow">Why Shalom</span><h2>A digital partner, not just a web developer.</h2><p>We think about the whole customer journey: how people discover you, understand your offer, trust your brand and take action.</p><Link className="text-link" to="/about">Meet the team behind the work <ArrowRight size={17}/></Link></div><div className="value-grid reveal">{["Modern & purposeful","Fast & reliable","Business-first","Built to evolve"].map((x,i)=><div className="value" key={x}><span>0{i+1}</span><h3>{x}</h3><p>Design and technology decisions grounded in real business outcomes.</p></div>)}</div></div></section>
 
-    <section className="section"><div className="container"><SectionTitle eyebrow="Selected concepts" title="A glimpse of what we can create." body="We don't have a client portfolio to showcase yet, so these concept projects demonstrate the level of thinking and craft we bring to every build."/>
-    <div className="portfolio-grid">{portfolio.map((p,i)=><PortfolioCard key={p.title} item={p} index={i}/>)}</div><div className="center-action"><Link className="button button-outline" to="/portfolio">Explore Our Work <ArrowRight size={17}/></Link></div></div></section>
+    {/* <section className="section"><div className="container"><SectionTitle eyebrow="Selected concepts" title="A glimpse of what we can create." body="We don't have a client portfolio to showcase yet, so these concept projects demonstrate the level of thinking and craft we bring to every build."/>
+    <div className="portfolio-grid">{portfolio.map((p,i)=><PortfolioCard key={p.title} item={p} index={i}/>)}</div><div className="center-action"><Link className="button button-outline" to="/portfolio">Explore Our Work <ArrowRight size={17}/></Link></div></div></section> */}
 
     <section className="section process-section">
       <div className="container">
@@ -160,7 +161,10 @@ function Home() {
       </div>
     </section>
 
-    <section className="section testimonials"><div className="container"><SectionTitle eyebrow="Client perspective" title="The kind of experience we're building toward." center/><div className="testimonial-grid">{testimonials.map(t=><div className="testimonial reveal" key={t.quote}><div className="stars">{[1,2,3,4,5].map(n=><Star key={n} size={15} fill="currentColor"/>)}</div><p>“{t.quote}”</p><b>{t.name}</b><small>{t.role}</small></div>)}</div></div></section>
+    <section className="section testimonials">
+      <div className="container">
+        <SectionTitle eyebrow="Client perspective" title="The kind of experience we're building toward." center/>
+        <div className="testimonial-grid">{testimonials.map(t=><div className="testimonial reveal" key={t.quote}><div className="stars">{[1,2,3,4,5].map(n=><Star key={n} size={15} fill="currentColor"/>)}</div><p>“{t.quote}”</p><b>{t.name}</b><small>{t.role}</small></div>)}</div></div></section>
     <CTA/>
   </Layout>
 }
