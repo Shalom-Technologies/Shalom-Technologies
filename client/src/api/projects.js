@@ -1,5 +1,10 @@
 import api from './axios';
 
+export async function listProjects() {
+  const { data } = await api.get('/projects');
+  return data.projects; // array of lightweight project summaries
+}
+
 export async function createProject(description) {
   const { data } = await api.post('/projects', { description });
   return data; // project object

@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProject, tweakProject } from '../api/projects';
 import LoadingIndicator from '../components/LoadingIndicator';
 import Seo from '../components/Seo';
+import { withWorkingNavigation } from '../utils/mockupHelpers';
 import styles from './Preview.module.css';
 
 const MAX_TWEAKS = 5;
@@ -96,7 +97,7 @@ function PreviewPage() {
           <div className={styles.iframeWrap}>
             <iframe
               title="Your website draft preview"
-              srcDoc={project.mockupCode}
+              srcDoc={withWorkingNavigation(project.mockupCode)}
               sandbox="allow-scripts"
               className={styles.iframe}
             />

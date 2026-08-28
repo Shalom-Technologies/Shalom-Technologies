@@ -2,6 +2,7 @@ const express = require('express');
 const { rateLimit, ipKeyGenerator } = require('express-rate-limit');
 const {
   createProject,
+  listProjects,
   getProject,
   tweakProject,
   selectAddOns,
@@ -44,6 +45,7 @@ const tweakLimiter = rateLimit({
 });
 
 router.post('/', requireAuth, createProjectLimiter, createProject);
+router.get('/', requireAuth, listProjects);
 router.get('/:id', requireAuth, getProject);
 router.post('/:id/tweak', requireAuth, tweakLimiter, tweakProject);
 router.post('/:id/addons', requireAuth, selectAddOns);

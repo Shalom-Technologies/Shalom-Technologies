@@ -12,17 +12,24 @@ const openai = new OpenAI({
 // (the initial mockup, since it's the client's first impression), and cheaper
 // models for the higher-frequency / lower-stakes calls (tweaks happen up to
 // 5x per project; summarization is pure text transformation).
+//
+// MOCKUP_MODEL defaults to a stronger model than the others — mockup quality
+// is the single biggest driver of whether a client trusts the product enough
+// to pay a deposit, so it's worth the extra cost per generation. Override any
+// of these via env vars if you want to tune the cost/quality tradeoff.
 // ---------------------------------------------------------------------------
-const MOCKUP_MODEL = process.env.OPENAI_MOCKUP_MODEL || 'gpt-4o-mini';
+const MOCKUP_MODEL = process.env.OPENAI_MOCKUP_MODEL || 'gpt-4o';
 const TWEAK_MODEL = process.env.OPENAI_TWEAK_MODEL || 'gpt-4o-mini';
 const SUMMARY_MODEL = process.env.OPENAI_SUMMARY_MODEL || 'gpt-4o-mini';
 
 // Hard caps on output length. Mockups are HTML documents so they need real
 // room, but capping still protects you from a runaway/looping generation
-// burning far more tokens (and money) than intended.
-const MAX_TOKENS_MOCKUP = 4000;
-const MAX_TOKENS_TWEAK_PATCH = 1500; // a diff patch is much smaller than a full doc
-const MAX_TOKENS_TWEAK_FULL = 4000; // fallback path, same ceiling as initial generation
+// burning far more tokens (and money) than intended. Raised from the
+// original 4000/4000 — a genuinely polished multi-section page with real
+// styling runs longer than that, and truncated mockups looked broken.
+const MAX_TOKENS_MOCKUP = 7000;
+const MAX_TOKENS_TWEAK_PATCH = 2000; // a diff patch is much smaller than a full doc
+const MAX_TOKENS_TWEAK_FULL = 7000; // fallback path, same ceiling as initial generation
 const MAX_TOKENS_SUMMARY = 800;
 
 // Only this many most-recent conversation turns are sent as context to the
@@ -69,15 +76,49 @@ function logUsage(label, response) {
 // Shared system rules that every generation call must obey. Keeping this in
 // one place means if you ever tighten the "no backend" constraint, you only
 // have to edit it once.
+//
+// This is deliberately opinionated and specific rather than saying "make it
+// look nice" — a vague instruction like that reliably produces the blandest
+// possible interpretation (centered heading, gray text, one generic button).
+// Concrete direction on structure, content, and visual choices is what
+// actually produces mockups that look like real, considered websites.
 // ---------------------------------------------------------------------------
 const MOCKUP_CONSTRAINTS = `
-You generate DEMO WEBSITE MOCKUPS ONLY. Strict rules:
-- Output a single self-contained HTML document (inline <style> and <script> tags only).
-- No external network calls: no fetch(), no XMLHttpRequest, no form actions pointing at real URLs, no imports of remote scripts except widely-used CDN libraries (e.g. Tailwind CDN, Google Fonts) if helpful.
-- No real backend behavior. Forms and buttons may only simulate behavior client-side (e.g. show a fake "Message sent!" toast via JS), never actually submit anywhere.
+You generate DEMO WEBSITE MOCKUPS for real businesses. These are shown to a
+paying client as their first impression of the product — they must look like
+a genuinely designed, professional website, not a rough wireframe or a
+generic template.
+
+TECHNICAL RULES (non-negotiable):
+- Output a single self-contained HTML document.
+- Use the Tailwind CDN (<script src="https://cdn.tailwindcss.com"></script>) for styling — this gives you a full utility-class system to work with rather than hand-rolling CSS, and produces more consistent, professional results.
+- You may load Google Fonts via a <link> tag for real typography.
+- No external network calls of any other kind: no fetch(), no XMLHttpRequest, no form actions pointing at real URLs, no analytics/tracking scripts.
+- No real backend behavior. Forms and buttons may only simulate behavior client-side (e.g. a "Message sent!" toast shown via a few lines of inline <script>), never actually submit anywhere.
+- For any imagery, use https://placehold.co/{width}x{height}?text={description} with a short descriptive text parameter (e.g. placehold.co/800x500?text=Team+at+work) — never claim or imply these are real photos, and never fabricate URLs to any other image host.
+- This is a SINGLE-PAGE demo document. Every navigation link must be an in-page anchor link (href="#some-id") where "some-id" is the exact id attribute of a real section that exists further down in this same document. Never link to other "pages" (e.g. about.html, /contact, index.html) or leave a placeholder href="#" with no matching section — those links will not work in the preview and make the demo look broken.
 - Do not include comments claiming functionality that isn't real.
-- Keep it visually polished: real layout, spacing, color choices, responsive basics.
 - Return ONLY valid JSON matching the provided schema. No markdown fences, no prose outside the JSON.
+
+CONTENT RULES:
+- Invent a plausible, specific business name if none was given — never leave placeholder text like "Business Name" or "Lorem ipsum" anywhere in the output.
+- Write real, concrete copy specific to the described business — actual service names, a believable value proposition, specific details that make it feel like a real business, not generic filler like "We are the best in the industry."
+- If the business is based in or serves East Africa, let that show naturally in the content where relevant (e.g. plausible local context, currency, or region) — without relying on stereotypes.
+- Every section needs to earn its place: don't pad with sections that have nothing real to say.
+
+STRUCTURE — build a genuinely complete page appropriate to the business type, generally including:
+- A navigation bar with the business name/logo and 3-5 relevant links (can be anchor links within the page).
+- A hero section with a clear, specific headline (not "Welcome to our website"), a supporting sentence, and a primary call-to-action button.
+- 2-4 content sections tailored to what this business actually needs — e.g. services/menu/portfolio/pricing, an about/story section, testimonials, or a gallery — chosen based on what's described, not a fixed template applied to everything.
+- A contact section or footer with plausible contact details and a simple contact form (client-side only, per the rules above).
+- A footer with business name, a short tagline, and copyright.
+
+VISUAL DESIGN — make deliberate choices, not defaults:
+- Choose a cohesive color palette that fits the business's mood and industry (a bakery, a law firm, and a tech startup should not look the same) — avoid the generic "blue gradient + white" corporate default unless it's genuinely the right fit.
+- Pick a real Google Fonts pairing (one for headings, one for body) rather than the system default font stack.
+- Use generous whitespace and clear visual hierarchy — don't cram everything into cramped, low-contrast blocks.
+- Include hover states on interactive elements and basic responsive behavior (the layout should not break on a narrow viewport).
+- Use simple inline SVG icons or Unicode symbols where icons help, rather than leaving sections icon-less and flat.
 `;
 
 /**
@@ -99,7 +140,7 @@ async function generateMockup(description) {
       { role: 'system', content: MOCKUP_CONSTRAINTS },
       {
         role: 'user',
-        content: `Build a demo mockup for this site description:\n\n"${description}"`,
+        content: `Build a complete demo mockup for this business:\n\n"${description}"\n\nMake specific, deliberate choices for this exact business — the color palette, typography, tone of the copy, and which content sections to include should all feel chosen for this business, not generic. Treat this as the client's first impression of what working with us looks like.`,
       },
     ],
     response_format: {

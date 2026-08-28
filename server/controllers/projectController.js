@@ -56,6 +56,23 @@ async function createProject(req, res) {
   }
 }
 
+// Returns the logged-in user's own projects, newest first, for the
+// dashboard list. Deliberately excludes heavy fields (mockupCode,
+// mockupHistory, full conversation) since the dashboard only needs summary
+// info — keeps the response small and fast.
+async function listProjects(req, res) {
+  try {
+    const projects = await Project.find({ userId: req.user.id })
+      .select('description status tweaksUsed subtotal depositAmount depositPaid liveUrl addOns createdAt updatedAt')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({ projects });
+  } catch (err) {
+    console.error('listProjects error:', err);
+    return res.status(500).json({ error: 'Failed to load your projects' });
+  }
+}
+
 async function getProject(req, res) {
   try {
     const project = await loadOwnedProject(req, res);
@@ -252,6 +269,7 @@ async function updateStatus(req, res) {
 
 module.exports = {
   createProject,
+  listProjects,
   getProject,
   tweakProject,
   selectAddOns,
