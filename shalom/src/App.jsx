@@ -73,6 +73,7 @@ function Footer() {
       <div><h4>Explore</h4><Link to="/services">Services</Link>
       {/* <Link to="/portfolio">Portfolio</Link> */}
       <Link to="/about">About</Link><Link to="/blog">Blog</Link></div>
+      <Link to="https://docs.google.com/forms/d/e/1FAIpQLSeD83qQGwnF7h_S06dqocR_SaixsO_-oMY8PNNFRJc5JnI3OA/viewform?usp=sharing&ouid=115064769298718409451">Careers</Link>
       <div><h4>Services</h4>{services.slice(0,4).map(s=><Link key={s.slug} to={"/services/"+s.slug}>{s.title}</Link>)}</div>
       <div><h4>Start a project</h4><a href="tel:+254703947330"><Phone size={15}/> +254 703 947 330</a><a href="mailto:muthonihannahhailu@gmail.com"><Mail size={15}/> muthonihannahhailu@gmail.com</a><Link to="/contact" className="footer-button">Free consultation <ArrowRight size={15}/></Link></div>
     </div>
