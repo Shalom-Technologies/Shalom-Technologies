@@ -239,6 +239,7 @@ function Contact() {
       email: formData.get("email"),
       phone: formData.get("phone"),
       service: formData.get("service"),
+      affiliate: formData.get("affiliate"),
       message: formData.get("message"),
     };
 
@@ -314,6 +315,16 @@ function Contact() {
         <option>Not sure yet</option>
       </select>
     </label>
+
+      <label>
+        Were you given a discount code? Enter it here
+        <input
+          name="affiliate"
+          placeholder="KASEY254"
+        />
+      </label>
+    
+    </div>
 
     <label>
       Tell us about your project
