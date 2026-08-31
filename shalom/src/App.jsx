@@ -292,7 +292,7 @@ function Contact() {
           placeholder="you@company.com"
         />
       </label>
-
+    
       <label>
         Phone
         <input
@@ -323,8 +323,6 @@ function Contact() {
           placeholder="KASEY254"
         />
       </label>
-    
-    </div>
 
     <label>
       Tell us about your project
